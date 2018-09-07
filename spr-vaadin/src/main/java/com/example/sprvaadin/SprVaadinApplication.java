@@ -6,8 +6,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
-public class SprVaadinApplication {  //https://www.baeldung.com/spring-boot-vaadin
+public class SprVaadinApplication{  //https://www.baeldung.com/spring-boot-vaadin
 
+	
 	public static void main(String[] args) {
 		SpringApplication.run(SprVaadinApplication.class, args);
 	}
@@ -24,6 +25,5 @@ public class SprVaadinApplication {  //https://www.baeldung.com/spring-boot-vaad
 			perRep.save(new Person("Steve", "Jobs"));
 			perRep.save(new Person("Bill", "Gates"));
 		};
-	}
-			
+	}	
 }
