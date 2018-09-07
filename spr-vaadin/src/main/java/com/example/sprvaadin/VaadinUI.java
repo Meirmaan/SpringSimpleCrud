@@ -131,6 +131,7 @@ public class VaadinUI extends UI{
     }
     
     private void update(Person p) {
+    	//binder.setBean(person);
     	perRep.save(person);
         updateGrid(filter.getValue());
     }
