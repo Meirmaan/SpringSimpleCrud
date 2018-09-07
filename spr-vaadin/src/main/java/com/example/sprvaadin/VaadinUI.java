@@ -40,10 +40,12 @@ public class VaadinUI extends UI{
 	Button save = new Button("Save", VaadinIcons.CHECK);
 	Button update = new Button("Update");
 	Binder<Person> binder = new Binder<>(Person.class);
-	Long id = (long) 1;
+	//Long id = (long) 1;
  	
 	@Override
 	protected void init(VaadinRequest request) {
+		
+		binder.bindInstanceFields(this);
 		//editor = new Service(perRep);
 		grid = new Grid<>(Person.class);
 		filter = new TextField();
@@ -62,11 +64,10 @@ public class VaadinUI extends UI{
 		HorizontalLayout actions = new HorizontalLayout(save, update);
 		VerticalLayout editor = new VerticalLayout(name, surname, actions);
 		
-		binder.bindInstanceFields(this);
-		binder.setBean(person);
+		//binder.setBean(person);
 		save.addClickListener(e -> save());
-		update.setDisableOnClick(true);
-		update.addClickListener(e -> update((long) id));
+		//update.setDisableOnClick(true);
+		update.addClickListener(e -> update(person));
 		
 		HorizontalLayout main = new HorizontalLayout();
 		main.addComponents(grid, editor);
@@ -82,12 +83,19 @@ public class VaadinUI extends UI{
 		
 		
 		setContent(mainLayout);
-
+	
+	}
+	
+	//from Service class 
+	public void setPerson(Person person) {
+	    this.person = person;
+	    binder.setBean(person);
+	    //BeanFieldGroup.bindFieldsUnbuffered(person, this);
 	}
 
-	//from Service class
 	private void save() {
 		person = new Person(name.getValue(), surname.getValue());
+		//this.person = p;
 		perRep.save(person);
 		updateGrid(filter.getValue());
 		name.setValue("");
@@ -115,22 +123,18 @@ public class VaadinUI extends UI{
     }
     
     private void editPerson(Person p) {
-    	name.setValue(p.getName());
-    	surname.setValue(p.getSurname());
-    	id = p.getId();
-    	update.setDisableOnClick(false);
-    	//p.setName(name.getValue());
-        //p.setSurname(surname.getValue());
-        //updateGrid(filter.getValue());
+    	this.person = p;
+    	name.setValue(person.getName());
+    	surname.setValue(person.getSurname());
+	    binder.setBean(person);
         name.focus();
     }
     
-    private void update(Long id) {
-        perRep.getOne((long) id).setName(name.getValue());
-        perRep.getOne((long) id).setSurname(surname.getValue());
-        update.setDisableOnClick(true);
+    private void update(Person p) {
+    	perRep.save(person);
         updateGrid(filter.getValue());
     }
+    
 
 	public void updateGrid(String filterText) {
 		if(filterText.isEmpty()) {
@@ -139,8 +143,6 @@ public class VaadinUI extends UI{
 		else {
 			grid.setItems(perRep.findBySurnameStartsWithIgnoreCase(filterText));
 		}
-		//List<Person> people = perRep.findAll();
-		//grid.setItems(people);
 	}
 	
 
